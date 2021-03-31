@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha test/*.spec.js",
-    "start": "tsc && node dist/server.js"
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
