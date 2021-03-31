@@ -18,7 +18,7 @@
   "keywords": [
     "node",
     "pokemon",
-    "typescript"    
+    "typescript"
   ],
   "author": "Rafael Garcia",
   "license": "MIT",
@@ -31,7 +31,6 @@
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
     "mocha": "^8.3.2",
-    "nodemon": "^2.0.7",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   },
