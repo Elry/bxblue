@@ -25,3 +25,8 @@ git subtree push --prefix dist heroku main
 ```bash
 git push heroku main
 ```
+
+### show heroku logs
+```bash
+heroku logs --tail
+```
