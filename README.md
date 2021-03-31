@@ -1,15 +1,27 @@
 # bxblue
-Bxblue pokemon calculator challenge
+Bxblue pokemon trade fairness calculator challenge
 
-## Api used
-[Poke API](http://pokeapi.co/docs/v2)
+## Links
+- [Poke API](http://pokeapi.co/docs/v2)
+- [Heroku uri](https://bxblue-pokemon.herokuapp.com/api)
 
-## compiling ts to js and run
+## compile ts to js
 ```bash
-$npm start
+npm build
 ```
 
-## compile ts to js only
+## running after building
 ```bash
-$npm build
+npm start
+```
+
+## heroku shenanigans
+### specific dir push
+```bash
+git subtree push --prefix dist heroku main
+```
+
+### default push
+```bash
+git push heroku main
 ```
