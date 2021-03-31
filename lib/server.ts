@@ -1,5 +1,5 @@
+import axios from "axios";
 import dotenv from "dotenv";
-import axios, {AxiosResponse, AxiosError} from "axios";
 import express, {Request, Response, NextFunction} from "express";
 
 dotenv.config();
@@ -9,8 +9,10 @@ const app = express();
 // home
 app.get("/", (req:Request, res:Response) => res.json("Bxblue pokemon calculator"));
 
+app.use(express.json());
+
 // get err
-app.use((err, req:Request, res:Response, next:NextFunction) => {
+app.use((err:any, req:Request, res:Response, next:NextFunction) => {
   if(err){
     res.status(err.status || 500)
     .type("json")
@@ -24,30 +26,37 @@ app.listen(process.env.PORT, () => {
 });
 
 // main
-app.get("/api", async (req:Request, res:Response):Promise<void> => {
-  const p1 = [
-    {"id": 12},
-    {"id": 11}
+app.post("/api", async (req:Request, res:Response):Promise<void> => {
+  // variables to use as example in case none is given
+  const p1Ex:object = [
+    {"id": 1},
+    {"id": 2}
   ];
   
-  const p2 = [
-    {"id": 12},
-    {"id": 11}
+  const p2Ex:object = [
+    {"id": 3},
+    {"id": 4}
   ];
   
-  let p1Check:string = checkSize(p1, "p1");
-  let p2Check:string = checkSize(p2, "p2");  
-
-  if(p1Check || p2Check){
-    res.status(400).json(p1Check + " " + p2Check);
-    return;
-  }
+  const user1:string = req.body.users.p1.name ? req.body.users.p1.name : "p1";
+  const user2:string = req.body.users.p2.name ? req.body.users.p2.name : "p2";
+  const p1:object[] = req.body.users.p1.pokemons ? req.body.users.p1.pokemons : p1Ex;  
+  const p2:object[] = req.body.users.p2.pokemons ? req.body.users.p2.pokemons : p2Ex;
 
   try{
+    let p1Check:string = checkSize(p1, "p1");
+    let p2Check:string = checkSize(p2, "p2");  
+    
+    // checking size between 1 and 6
+    if(p1Check || p2Check){
+      res.status(400).json(p1Check + " " + p2Check);
+      return;
+    }
+  
     let fair:boolean|string = await checkFairness(p1, p2);
 
     if(fair){ res.status(200).json(fair); }
-    else{ res.status(500).json("Error"); }
+    else{ throw 0; }
   }catch(err:any){
     res.status(500).json(`Error: ${err}`);
   }
@@ -62,9 +71,15 @@ const checkSize = (obj:object[], name:string):string => {
   return "";
 }
 
-const sumValues = async (val:object):Promise<number> => {
-  let sum:number = 0;
+// get base experience
+const getBaseExp = async (id:number):Promise<number> => {
+  const resp = await axios.get(`https://${process.env.POKEURI}` + id);
+  return resp.data.base_experience;
+}
 
+const sumValues = async (val:object):Promise<number> => {
+  let sum:number = 0;  
+  
   for(let i in val){
     sum += await getBaseExp(val[i].id);
   }
@@ -74,30 +89,15 @@ const sumValues = async (val:object):Promise<number> => {
 
 const checkFairness = async (p1:Object, p2:Object):Promise<boolean|string> => {
   let result:number = 0;
+  let p1Sum:number = await sumValues(p1);
+  let p2Sum:number = await sumValues(p2);
 
-  try{
-    let p1Sum:number = await sumValues(p1);
-    let p2Sum:number = await sumValues(p2);
-
-    if(p1Sum > p2Sum){
-      result = p1Sum - p2Sum;
-    }else{
-      result = p2Sum - p1Sum;
-    } 
-
-    return (result <= 5) ? "Fair" : "Not fair";
-  }catch(err){
-    console.log("Fairness check err:", err);
-    return false;
+  if(p1Sum > p2Sum){
+    result = p1Sum - p2Sum;
+  }else{
+    result = p2Sum - p1Sum;
   }
-}
 
-// get base experience
-const getBaseExp = async (id:number):Promise<number> => {
-  try {
-    const resp = await axios.get(`https://${process.env.POKEURI}` + id);
-    return resp.data.base_experience;
-  } catch (err) {
-    return 0;
-  }
+  let output:string = `p1 exp ${p1Sum} | p2 exp ${p2Sum}`
+  return (result <= 10) ? `Fair: ${output}` : `Not fair: ${output}`;
 }
