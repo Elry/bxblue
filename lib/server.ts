@@ -1,5 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import insert from "./db/insert";
+import select from "./db/select";
 import express, {Request, Response, NextFunction} from "express";
 
 dotenv.config();
@@ -7,7 +9,7 @@ dotenv.config();
 const app = express();
 
 // home
-app.get("/", (req:Request, res:Response) => res.json("Bxblue pokemon calculator"));
+app.get("/", (req:Request, res:Response) => res.status(200).json("Bxblue pokemon calculator"));
 
 app.use(express.json());
 
@@ -25,8 +27,17 @@ app.listen(process.env.PORT, () => {
   console.log(`Running at https://${process.env.HOSTNAME}:${process.env.PORT}`);
 });
 
+
+app.get("/list", (req:Request, res:Response):void => {  
+  select((e:any):void => {
+    console.log(e);
+    res.status(200).json(e);
+  });  
+});
+
 // main
-app.post("/api", async (req:Request, res:Response):Promise<void> => {
+app.post("/check", async (req:Request, res:Response):Promise<void> => {
+  insert(["p3", "p4"]);
   // variables to use as example in case none is given
   const p1Ex:object = [
     {"id": 1},
