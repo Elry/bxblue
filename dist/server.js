@@ -14,11 +14,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const dotenv_1 = __importDefault(require("dotenv"));
+// import mongoose from "mongoose";
+const insert_1 = __importDefault(require("./db/insert"));
+const select_1 = __importDefault(require("./db/select"));
 const express_1 = __importDefault(require("express"));
 dotenv_1.default.config();
 const app = express_1.default();
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true});
+// const connection = mongoose.connection;
+// connection.once("open", function() {
+// console.log("MongoDB database connection established successfully");
+// });
+// db.run("CREATE TABLE trades (user1 TEXT, user2 TEXT)", (err:any) => {
+// if(err){ return console.log(err); }
+// console.log("Created trades DB");
+// });
 // home
-app.get("/", (req, res) => res.json("Bxblue pokemon calculator"));
+app.get("/", (req, res) => res.status(200).json("Bxblue pokemon calculator"));
 app.use(express_1.default.json());
 // get err
 app.use((err, req, res, next) => {
@@ -32,8 +44,15 @@ app.use((err, req, res, next) => {
 app.listen(process.env.PORT, () => {
     console.log(`Running at https://${process.env.HOSTNAME}:${process.env.PORT}`);
 });
+app.get("/list", (req, res) => {
+    select_1.default((e) => {
+        console.log(e);
+        res.status(200).json(e);
+    });
+});
 // main
-app.post("/api", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/check", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    insert_1.default(["p3", "p4"]);
     // variables to use as example in case none is given
     const p1Ex = [
         { "id": 1 },
