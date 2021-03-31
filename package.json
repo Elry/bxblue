@@ -16,9 +16,9 @@
     "url": "git+https://github.com/Elry/bxblue.git"
   },
   "keywords": [
+    "node",
     "pokemon",
-    "typescript",
-    "node"
+    "typescript"    
   ],
   "author": "Rafael Garcia",
   "license": "MIT",
@@ -36,6 +36,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1"
   }
