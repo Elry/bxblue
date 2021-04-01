@@ -27,16 +27,19 @@ app.listen(process.env.PORT, () => {
   console.log(`Running at https://${process.env.HOSTNAME}:${process.env.PORT}`);
 });
 
-app.get("/v1/trade/list", (req:Request, res:Response):void => {  
-  select((e:any):void => {
-    console.log(e);
-    res.status(200).json(e);
-  });  
+app.get("/v1/trade/list", (req:Request, res:Response):void => {
+  try{
+    select((e:any):void => {
+      console.log(e);
+      res.status(200).json(e);
+    });  
+  }catch(err:any){
+    res.status(500).json(err);
+  }
 });
 
 // main
 app.post("/v1/trade/check", async (req:Request, res:Response):Promise<void> => {
-
   // variables to use as example in case none is given
   const p1Ex:object = [
     {"id": 1},
