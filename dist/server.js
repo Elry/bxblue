@@ -14,21 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const dotenv_1 = __importDefault(require("dotenv"));
-// import mongoose from "mongoose";
 const insert_1 = __importDefault(require("./db/insert"));
 const select_1 = __importDefault(require("./db/select"));
 const express_1 = __importDefault(require("express"));
 dotenv_1.default.config();
 const app = express_1.default();
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true});
-// const connection = mongoose.connection;
-// connection.once("open", function() {
-// console.log("MongoDB database connection established successfully");
-// });
-// db.run("CREATE TABLE trades (user1 TEXT, user2 TEXT)", (err:any) => {
-// if(err){ return console.log(err); }
-// console.log("Created trades DB");
-// });
 // home
 app.get("/", (req, res) => res.status(200).json("Bxblue pokemon calculator"));
 app.use(express_1.default.json());
@@ -52,7 +42,6 @@ app.get("/list", (req, res) => {
 });
 // main
 app.post("/check", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    insert_1.default(["p3", "p4"]);
     // variables to use as example in case none is given
     const p1Ex = [
         { "id": 1 },
@@ -76,6 +65,7 @@ app.post("/check", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
         let fair = yield checkFairness(p1, p2);
         if (fair) {
+            insert_1.default([user1, user2], [p1, p2], fair);
             res.status(200).json(fair);
         }
         else {

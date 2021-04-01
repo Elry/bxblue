@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 // home
-app.get("/", (req:Request, res:Response) => res.status(200).json("Bxblue pokemon calculator"));
+app.get("/", (req:Request, res:Response) => res.status(200).json("Bxblue pokemon calculator challenge"));
 
 app.use(express.json());
 
@@ -27,8 +27,7 @@ app.listen(process.env.PORT, () => {
   console.log(`Running at https://${process.env.HOSTNAME}:${process.env.PORT}`);
 });
 
-
-app.get("/list", (req:Request, res:Response):void => {  
+app.get("/v1/trade/list", (req:Request, res:Response):void => {  
   select((e:any):void => {
     console.log(e);
     res.status(200).json(e);
@@ -36,8 +35,8 @@ app.get("/list", (req:Request, res:Response):void => {
 });
 
 // main
-app.post("/check", async (req:Request, res:Response):Promise<void> => {
-  insert(["p3", "p4"]);
+app.post("/v1/trade/check", async (req:Request, res:Response):Promise<void> => {
+
   // variables to use as example in case none is given
   const p1Ex:object = [
     {"id": 1},
@@ -48,7 +47,7 @@ app.post("/check", async (req:Request, res:Response):Promise<void> => {
     {"id": 3},
     {"id": 4}
   ];
-  
+
   const user1:string = req.body.users.p1.name ? req.body.users.p1.name : "p1";
   const user2:string = req.body.users.p2.name ? req.body.users.p2.name : "p2";
   const p1:object[] = req.body.users.p1.pokemons ? req.body.users.p1.pokemons : p1Ex;  
@@ -64,9 +63,12 @@ app.post("/check", async (req:Request, res:Response):Promise<void> => {
       return;
     }
   
-    let fair:boolean|string = await checkFairness(p1, p2);
+    let fair:string = await checkFairness(p1, p2);
 
-    if(fair){ res.status(200).json(fair); }
+    if(fair){
+      insert([user1, user2], [p1, p2], fair);
+      res.status(200).json(fair);
+    }
     else{ throw 0; }
   }catch(err:any){
     res.status(500).json(`Error: ${err}`);
@@ -98,7 +100,7 @@ const sumValues = async (val:object):Promise<number> => {
   return sum;
 }
 
-const checkFairness = async (p1:Object, p2:Object):Promise<boolean|string> => {
+const checkFairness = async (p1:Object, p2:Object):Promise<string> => {
   let result:number = 0;
   let p1Sum:number = await sumValues(p1);
   let p2Sum:number = await sumValues(p2);
