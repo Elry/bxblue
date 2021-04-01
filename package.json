@@ -7,9 +7,9 @@
     "lib": "lib"
   },
   "scripts": {
+    "start": "node dist/server.js",
     "build": "tsc",
     "test": "mocha test/*.spec.js",
-    "start": "node dist/server.js",
     "build-start": "tsc & node dist/server.js"
   },
   "repository": {
