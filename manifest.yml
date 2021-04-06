@@ -1,0 +1,6 @@
+ 
+applications:
+  - name: poketrader
+    memory: 64M
+    buildpacks:
+      - https://github.com/cloudfoundry/nodejs-buildpack
