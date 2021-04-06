@@ -10,10 +10,7 @@ dotenv.config();
 const app = express();
 const router = express.Router();
 
-// reading received json data with default express
-app.use(express.json());
-
-const enableCORS = function (req:Request, res:Response, next:NextFunction) {
+function enableCORS(req:Request, res:Response, next:NextFunction){
   if (!process.env.DISABLE_XORIGIN) {
     /* Test only*/
     const allowedOrigins = ["*"]; 
@@ -31,11 +28,14 @@ const enableCORS = function (req:Request, res:Response, next:NextFunction) {
   next();
 };
 
-const shouldCompress = (req:Request, res:Response) => {
+function shouldCompress(req:Request, res:Response){
   if (req.headers['x-no-compression']) { return false; }
   // standard filter
   return compression.filter(req, res)
 }
+
+// reading received json data with default express
+app.use(express.json());
 
 // compression server responses
 app.use(compression({filter: shouldCompress}));
@@ -46,6 +46,15 @@ app.use((err:any, req:Request, res:Response, next:NextFunction):void => {
     res.status(err.status || 500)
     .type("json")
     .send(err.message || "server error");
+  }
+});
+
+// 404
+app.use((req:Request, res:Response) => {
+  if (req.method.toLowerCase() === "options") {
+    res.end();
+  } else {
+    res.status(404).type("json").send("Not Found");
   }
 });
 
@@ -112,7 +121,7 @@ app.post("/v1/trade/check", async (req:Request, res:Response):Promise<void> => {
   }
 });
 
-const checkSize = (obj:object[], name:string):string => {
+function checkSize(obj:object[], name:string):string{
   if(obj.length < 1){
     return `${name} must provide at least one pokemon`;
   }else if(obj.length > 6){
@@ -122,12 +131,12 @@ const checkSize = (obj:object[], name:string):string => {
 }
 
 // get base experience
-const getBaseExp = async (id:number):Promise<number> => {
+async function getBaseExp(id:number):Promise<number>{
   const resp = await axios.get(`https://${process.env.POKEURI}` + id);
   return resp.data.base_experience;
 }
 
-const sumValues = async (val:object):Promise<number> => {
+async function sumValues(val:object):Promise<number>{
   let sum:number = 0;  
   
   for(let i in val){
@@ -137,7 +146,7 @@ const sumValues = async (val:object):Promise<number> => {
   return sum;
 }
 
-const checkFairness = async (p1:Object, p2:Object):Promise<string> => {
+async function checkFairness(p1:Object, p2:Object):Promise<string>{
   let result:number = 0;
   let p1Sum:number = await sumValues(p1);
   let p2Sum:number = await sumValues(p2);
