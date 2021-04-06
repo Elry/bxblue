@@ -2,19 +2,46 @@ import axios from "axios";
 import dotenv from "dotenv";
 import insert from "./db/insert";
 import select from "./db/select";
+import compression from "compression";
 import express, {Request, Response, NextFunction} from "express";
 
 dotenv.config();
 
 const app = express();
+const router = express.Router();
 
-// home
-app.get("/", (req:Request, res:Response) => res.status(200).json("Bxblue pokemon calculator challenge"));
-
+// reading received json data with default express
 app.use(express.json());
 
+const enableCORS = function (req:Request, res:Response, next:NextFunction) {
+  if (!process.env.DISABLE_XORIGIN) {
+    /* Test only*/
+    const allowedOrigins = ["*"]; 
+    const origin = req.headers.origin;
+    /* Test only*/
+
+    if (!process.env.XORIGIN_RESTRICT || allowedOrigins.indexOf(origin) > -1) {
+      res.set({
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods": "GET, POST",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+      });
+    }
+  }
+  next();
+};
+
+const shouldCompress = (req:Request, res:Response) => {
+  if (req.headers['x-no-compression']) { return false; }
+  // standard filter
+  return compression.filter(req, res)
+}
+
+// compression server responses
+app.use(compression({filter: shouldCompress}));
+
 // get err
-app.use((err:any, req:Request, res:Response, next:NextFunction) => {
+app.use((err:any, req:Request, res:Response, next:NextFunction):void => {
   if(err){
     res.status(err.status || 500)
     .type("json")
@@ -22,11 +49,18 @@ app.use((err:any, req:Request, res:Response, next:NextFunction) => {
   }
 });
 
-// listener
-app.listen(process.env.PORT, () => {
-  console.log(`Running at https://${process.env.HOSTNAME}:${process.env.PORT}`);
+// setting basic cors
+app.use('/api', enableCORS, router);
+
+// home
+app.get("/", (req:Request, res:Response):void => { 
+  res.status(200).json("PokeTrade: pokemon trade fairness calculator");
 });
 
+// initial listener
+app.listen(process.env.PORT, ():void => console.log('Server started successfully'));
+
+// GET /list
 app.get("/v1/trade/list", (req:Request, res:Response):void => {
   try{
     select((e:any):void => {
@@ -38,7 +72,7 @@ app.get("/v1/trade/list", (req:Request, res:Response):void => {
   }
 });
 
-// main
+// POST /check
 app.post("/v1/trade/check", async (req:Request, res:Response):Promise<void> => {
   // variables to use as example in case none is given
   const p1Ex:object = [
