@@ -1,4 +1,4 @@
-import { db } from "./conn";
+import { db } from "./conn.service";
 
 const insert = (users:object, pokemons:object, status:string) => {
   let query:string = `INSERT INTO trades(user1, user2, user1_pokemons, user2_pokemons, status) VALUES(?, ?, ?, ?, ?)`;

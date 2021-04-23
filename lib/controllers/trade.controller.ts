@@ -1,6 +1,6 @@
 import axios from "axios";
-import select from "./../db/select";
-import insert from "./../db/insert";
+import select from "../services/select.service";
+import insert from "../services/insert.service";
 import { Request, Response } from "express";
 
 function checkSize(obj:object[], name:string):string{
@@ -47,7 +47,7 @@ export const tradeList = function(req:Request, res:Response):void{
     select((e:any):void => {
       console.log(e);
       res.status(200).json(e);
-    });  
+    });
   }catch(err:any){
     res.status(500).json(err);
   }
