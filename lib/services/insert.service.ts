@@ -1,6 +1,6 @@
 import { db } from "./conn.service";
 
-const insert = (users:Record<string, unknown>, pokemons:Record<string, unknown>, status:string):void => {
+const insert = (users:string[], pokemons:object[], status:string):void => {
   const query = `INSERT INTO trades(user1, user2, user1_pokemons, user2_pokemons, status) VALUES(?, ?, ?, ?, ?)`;
 
   const user1Pokemons = JSON.stringify(pokemons[0]);

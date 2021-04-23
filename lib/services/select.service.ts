@@ -1,9 +1,9 @@
 import { db } from "./conn.service";
 
-const select = async (callback:(res:Record<string, unknown>) => void ):Promise<void> => {
-  db.all(`SELECT * FROM trades`, (err:any, results:Record<string, unknown>):void|Record<string, unknown> => {
+const select = async (callback:(res:object) => void ):Promise<void> => {
+  db.all(`SELECT * FROM trades`, (err:any, results:object):void|object => {
     if (err) { return console.error(err.message); }    
-    callback(results);    
+    callback(results);
   });
 }
 
