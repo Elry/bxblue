@@ -5,7 +5,7 @@ import corsConfig from './utils/cors';
 import swaggerDoc from '../swagger.json';
 import swaggerUi from "swagger-ui-express";
 import tradeRoute from "./routes/trade.route";
-import express, {Request, Response, NextFunction} from "express";
+import express, {Request, Response} from "express";
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(compression());
 
 // get err
-app.use((err:any, req:Request, res:Response, next:NextFunction):void => {
+app.use((err:any, req:Request, res:Response):void => {
   if(err){
     res.status(err.status || 500)
     .type("json")

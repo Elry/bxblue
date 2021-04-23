@@ -19,18 +19,18 @@ async function getBaseExp(id:number):Promise<number>{
 }
   
 async function sumValues(val:object):Promise<number>{
-  let sum:number = 0;
+  let sum = 0;
 
-  for(let i in val){
+  for(const i in val){
     sum += await getBaseExp(val[i].id);
   }
   return sum;
 }
   
 async function checkFairness(p1:Object, p2:Object):Promise<string>{
-  let result:number = 0;
-  let p1Sum:number = await sumValues(p1);
-  let p2Sum:number = await sumValues(p2);
+  let result = 0;
+  const p1Sum:number = await sumValues(p1);
+  const p2Sum:number = await sumValues(p2);
   
   if(p1Sum > p2Sum){
     result = p1Sum - p2Sum;
@@ -38,7 +38,7 @@ async function checkFairness(p1:Object, p2:Object):Promise<string>{
     result = p2Sum - p1Sum;
   }
   
-  let output:string = `p1 exp ${p1Sum} | p2 exp ${p2Sum}`
+  const output = `p1 exp ${p1Sum} | p2 exp ${p2Sum}`
   return (result <= 10) ? `Fair: ${output}` : `Not fair: ${output}`;
 }
 

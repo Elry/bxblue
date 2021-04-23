@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc",
     "deploy": "cf push",
-    "start": "node dist/lib/server.js",
+    "lint": "eslint . --ext .ts --fix",
+    "start": "node dist/lib/server.js",    
     "test": "jest --coverage --forceExit",
     "test:watch": "jest --coverage --watchAll",
     "build-start": "tsc & node dist/server.js"
@@ -38,6 +39,9 @@
     "@types/node": "^14.14.37",
     "@types/sqlite3": "^3.1.7",
     "@types/swagger-ui-express": "^4.1.2",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.24.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.4",
     "ts-node": "^9.1.1",
