@@ -5,7 +5,6 @@ Pokemon trade fairness calculator
 - [Poke API](http://pokeapi.co/docs/v2)
 - [Heroku uri](https://bxblue-pokemon.herokuapp.com/api)
 - [Typescript styleguide](https://google.github.io/styleguide/tsguide.html)
-- [Swagger mocker](https://app.swaggerhub.com/apis/Elry/PokeTrader/0.1.0)
 
 ## passing data to the trade check route
 ```bash
