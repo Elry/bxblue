@@ -1,0 +1,14 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Poke Trade API",
+    "description": "Pokemon trade calculator api",
+    "contact": {
+      "email": "rafaelgarciarmt@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "tags":[
+  
+  ]
+}
