@@ -1,6 +1,5 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import compression from "compression";
 import corsConfig from './utils/cors';
 import swaggerDoc from '../swagger.json';
 import swaggerUi from "swagger-ui-express";
@@ -13,9 +12,6 @@ const app = express();
 
 // reading received json data with default express
 app.use(express.json());
-
-// compression server responses
-app.use(compression());
 
 // setting basic cors
 app.use(cors(corsConfig));
