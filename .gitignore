@@ -73,3 +73,5 @@ typings/
 # public
 
 dist/
+
+.DS_Store
